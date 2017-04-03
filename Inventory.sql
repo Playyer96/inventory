@@ -54,7 +54,8 @@ ALTER TABLE inventory OWNER TO postgres;
 CREATE TABLE items (
     id integer NOT NULL,
     name character varying(2044) NOT NULL,
-    type character varying(2044) NOT NULL
+    type character varying(2044) NOT NULL,
+    cost integer DEFAULT 0 NOT NULL
 );
 
 
@@ -66,7 +67,8 @@ ALTER TABLE items OWNER TO postgres;
 
 CREATE TABLE "user" (
     gold character varying(2044) NOT NULL,
-    id integer NOT NULL
+    id integer NOT NULL,
+    name character varying(2044) DEFAULT 'x'::character varying NOT NULL
 );
 
 
@@ -76,23 +78,26 @@ ALTER TABLE "user" OWNER TO postgres;
 -- Data for Name: inventory; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO inventory VALUES (1, 1, 3);
-INSERT INTO inventory VALUES (1, 2, 5);
+INSERT INTO inventory VALUES (1, 2, 20);
+INSERT INTO inventory VALUES (2, 2, 3);
+INSERT INTO inventory VALUES (2, 1, 0);
+INSERT INTO inventory VALUES (1, 1, 7);
 
 
 --
 -- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO items VALUES (1, 'sword', 'sword');
-INSERT INTO items VALUES (2, 'Axe', 'Axe');
+INSERT INTO items VALUES (1, 'sword', 'sword', 250);
+INSERT INTO items VALUES (2, 'Axe', 'Axe', 400);
 
 
 --
 -- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "user" VALUES ('700', 1);
+INSERT INTO "user" VALUES ('200', 1, 'jaramiYolo');
+INSERT INTO "user" VALUES ('800', 2, 'boquetes');
 
 
 --
@@ -128,14 +133,6 @@ ALTER TABLE ONLY "user"
 
 
 --
--- Name: inventory unique_item_id; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY inventory
-    ADD CONSTRAINT unique_item_id UNIQUE (item_id);
-
-
---
 -- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -148,6 +145,13 @@ ALTER TABLE ONLY "user"
 --
 
 CREATE INDEX index_amount ON inventory USING btree (amount);
+
+
+--
+-- Name: index_cost; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX index_cost ON items USING btree (cost);
 
 
 --
@@ -165,6 +169,13 @@ CREATE INDEX index_id1 ON items USING btree (id);
 
 
 --
+-- Name: index_name; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX index_name ON "user" USING btree (name);
+
+
+--
 -- Name: index_type; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -176,6 +187,13 @@ CREATE INDEX index_type ON items USING btree (name);
 --
 
 CREATE INDEX index_type1 ON items USING btree (type);
+
+
+--
+-- Name: inventory_item_id_idx; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX inventory_item_id_idx ON inventory USING btree (item_id);
 
 
 --
